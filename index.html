@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>❤Love you❤</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:linear-gradient(135deg,#ffeef8,#e0c3fc);font-family:-apple-system,PingFang SC,Helvetica,Arial;position:relative}
+.bubble{
+  position:absolute;background:#fff;border-radius:1em;box-shadow:0 .3em 1em rgba(0,0,0,.15);
+  color:#333;opacity:0;transform:scale(.3) rotate(var(--r));animation:pop .6s forwards;
+  display:flex;align-items:center;justify-content:center;padding:.6em 1em;
+  max-width:90vw;max-height:90vh;word-break:break-all;
+}
+@keyframes pop{to{opacity:1;transform:scale(1) rotate(var(--r))}}
+</style>
+</head>
+<body>
+<script>
+/* ========== 用户可调参数 ========== */
+const cfg = {
+  bubbleWidth: 1400,  // px
+  bubbleHeight: 400,  // px
+  fontSize: 100,      // px
+  eachCount: 3       // 每条文本出现几次（完全一致）
+};
+
+/* ========== 原始文本池 ========== */
+const rawTips = [
+  "我想你了","别熬夜","保持微笑呀","刘雨婷是最棒的","顺顺利利",
+  "每天都要元气满满","早点休息","天冷了，多穿衣服","记得吃水果",
+  "多喝水哦~","别焦虑哦","我爱你！！！！","一直爱你","多想我","我们会一直在一起"
+];
+
+/* ========== 生成「每条出现次数一致」的总池子 ========== */
+let tips = [];
+for (let i = 0; i < cfg.eachCount; i++) tips = tips.concat(rawTips);
+
+/* ========== Fisher-Yates 洗牌 ========== */
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+tips = shuffle(tips); // 先打乱
+
+/* ========== 工具函数 ========== */
+function random(min, max) { return Math.random() * (max - min) + min; }
+
+function spawn() {
+  if (tips.length === 0) {
+    tips = shuffle(rawTips.concat(...Array(cfg.eachCount).fill(rawTips))); // 重新洗牌
+} 
+  const div = document.createElement('div');
+  div.className = 'bubble';
+  div.textContent = tips.pop(); // 取最后一个（顺序随机）
+
+  /* 动态大小 */
+  div.style.width = cfg.bubbleWidth + 'px';
+  div.style.height = cfg.bubbleHeight + 'px';
+  div.style.fontSize = cfg.fontSize + 'px';
+
+  /* 随机旋转 */
+  const rot = random(-12, 12);
+  div.style.setProperty('--r', rot + 'deg');
+
+  /* 安全位置：留边 20px */
+  const pad = 20;
+  const maxLeft = window.innerWidth - cfg.bubbleWidth - pad;
+  const maxTop = window.innerHeight - cfg.bubbleHeight - pad;
+  const left = random(pad, Math.max(pad, maxLeft));
+  const top = random(pad, Math.max(pad, maxTop));
+  div.style.left = left + 'px';
+  div.style.top = top + 'px';
+
+  document.body.appendChild(div);
+}
+
+/* ========== 初始批量 ========== */
+setInterval(() => {
+    if (tips.length === 0) tips = shuffle([...rawTips]); // 每条1次即循环
+    spawn();
+}, 230); // 例如 800
+
+/* ========== 后续补充（直到池子用完） ========== */
+const addTimer = setInterval(() => {
+  if (tips.length === 0) { clearInterval(addTimer); return; }
+  spawn();
+}, random(600, 1600));
+</script>
+</body>
+</html>
