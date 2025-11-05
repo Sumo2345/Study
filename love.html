@@ -16,33 +16,28 @@
   </style>
 </head>
 <body>
+<!-- 初始蒙层：点我❤ -->
+<div id="mask" style="position:fixed;inset:0;background:rgba(0,0,0,.6);color:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;font-size:6vw;cursor:pointer;">点我❤</div>
+
 <script>
-/* ========== ① 换音乐：填写本地路径或网络 mp3 ========== */
-/* ========== 音乐：可换路径 + 点屏播放 ========== */
-const bgmSrc = 'https://m701.music.126.net/20251105212728/4f427560199606f63c2bf0e207a85992/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/14096444542/bafc/a068/39f8/9a9e06e5634410b5e7e81df24749e656.mp3?vuutv=BpVU/8TeawBc+X2DK5+YOPZwduowjRyTmuTjru4LrKEpu/0425fPZeFSn+JddOG63h0bGrIjEAAUGVvVgyXOmXvwqCsqbSfgW6rur6hdcFTpXtPsIU9uzybKubo/ha6Txz89+ChH5xOLEdrdtcCtuQ==&cdntag=bWFyaz1vc193ZWIscXVhbGl0eV9zdGFuZGFyZA'; // ① 先测试
+/* ========== 音乐（可换路径）+ 点屏播放 ========== */
+const bgmSrc = './mci.mp3';   // 同目录相对路径
 const bgm = new Audio(bgmSrc);
 bgm.loop = true;
 bgm.muted = true;
-bgm.load();                         // 强制加载
-bgm.play().catch(()=>{});           // 先静音播
+bgm.load();
+bgm.play().catch(()=>{});
 
+/* 点屏消失 + 解除静音（一次性）*/
+const mask = document.getElementById('mask');
 document.body.addEventListener('touchstart', () => {
-  if (bgm.muted) {
-    bgm.muted = false;
-    bgm.play().catch(()=>{});
-  }
-}, { once: true });
-/* 第一次点屏幕 → 解除静音 + 继续播放 */
-document.body.addEventListener('touchstart', () => {
-  if (bgm.muted) {
-    bgm.muted = false;
-    bgm.play().catch(()=>{});
-  }
+  mask && mask.remove();
+  if (bgm.muted) { bgm.muted = false; bgm.play().catch(()=>{}); }
 }, { once: true });
 
 /* ========== 气泡参数 ========== */
 const cfg = { bubbleWidth: 45, bubbleHeight: 9, fontSize: 3, eachCount: 1 };
-const rawTips = ["我想你了","别熬夜","保持微笑呀","刘雨婷是最棒的","顺顺利利","每天都要元气满满","早点休息","天冷了，多穿衣服","记得吃水果","多喝水哦~","别焦虑哦","我爱你！！！！","一直爱你","多想我","我们会一直在一起",'我们永远不要分开','不开心就要说出来哦！','宝宝最棒啦！！','爱你~❤❤❤','不要内耗哦~'];
+const rawTips = ["我想你了","别熬夜","保持微笑呀","刘雨婷是最棒的！","顺顺利利","每天都要元气满满","早点休息","天冷了，多穿衣服","记得吃水果","多喝水哦~","别焦虑哦","我爱你！！！！","一直爱你","多想我","我们会一直在一起",'我们永远不要分开','不开心就要说出来哦！','宝宝最棒啦！！','爱你~❤❤❤','不要内耗哦~','我永远爱刘雨婷','我想和你有以后❤','少生点气哦','想要一直在你身边❤'];
 let tips = []; for (let i = 0; i < cfg.eachCount; i++) tips = tips.concat(rawTips); function shuffle(arr){ for (let i = arr.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; } tips = shuffle(tips); function random(min, max){ return Math.random() * (max - min) + min; }
 
 /* ========== 气泡：限数 + 定时淘汰（无动画自毁） ========== */
@@ -68,12 +63,10 @@ function spawn(){
   div.style.top  = top + 'vh';
 
   /* 不再自己 remove → 永不禁播 */
-  // 删掉 animationend 里的 remove()
-
   document.body.appendChild(div);
   queue.push(div);          // 入队
 
-  /* 超 150 才删队头（统一淘汰）*/
+  /* 超 80 才删队头（统一淘汰）*/
   if (queue.length > MAX) {
     const first = queue.shift();
     if (first) first.remove();
@@ -84,6 +77,3 @@ setInterval(spawn, 250);
 </script>
 </body>
 </html>
-
-
-
