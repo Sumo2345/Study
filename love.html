@@ -34,10 +34,47 @@ document.body.addEventListener('touchstart', () => {
   }
 }, { once: true });
 
-/* ========== 原气泡逻辑（未改动） ========== */
+/* ========== 气泡参数 ========== */
 const cfg = { bubbleWidth: 45, bubbleHeight: 9, fontSize: 3, eachCount: 1 };
 const rawTips = ["我想你了","别熬夜","保持微笑呀","刘雨婷是最棒的","顺顺利利","每天都要元气满满","早点休息","天冷了，多穿衣服","记得吃水果","多喝水哦~","别焦虑哦","我爱你！！！！","一直爱你","多想我","我们会一直在一起",'我们永远不要分开','不开心就要说出来哦！','宝宝最棒啦！！','爱你~❤❤❤','不要内耗哦~'];
-let tips = []; for (let i = 0; i < cfg.eachCount; i++) tips = tips.concat(rawTips); function shuffle(arr){ for (let i = arr.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; } tips = shuffle(tips); function random(min, max){ return Math.random() * (max - min) + min; } function spawn(){ if (tips.length === 0) tips = shuffle([...rawTips]); const div = document.createElement('div'); div.className = 'bubble'; div.textContent = tips.pop(); div.style.width = cfg.bubbleWidth + 'vw'; div.style.height = cfg.bubbleHeight + 'vh'; div.style.fontSize = cfg.fontSize + 'vw'; const rot = random(-20, 20); div.style.setProperty('--r', rot + 'deg'); const pad = 0.5; const maxLeft = 100 - cfg.bubbleWidth - pad; const maxTop = 100 - cfg.bubbleHeight - pad; const left = random(pad, Math.max(pad, maxLeft)); const top = random(pad, Math.max(pad, maxTop)); div.style.left = left + 'vw'; div.style.top = top + 'vh'; document.body.appendChild(div); } setInterval(spawn, 250);
+let tips = []; for (let i = 0; i < cfg.eachCount; i++) tips = tips.concat(rawTips); function shuffle(arr){ for (let i = arr.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; } tips = shuffle(tips); function random(min, max){ return Math.random() * (max - min) + min; }
+
+/* ========== 气泡：限数 + 定时淘汰（无动画自毁） ========== */
+const queue = [];          // 生成顺序队列
+const MAX   = 80;         // 同时存在上限
+
+function spawn(){
+  if (tips.length === 0) tips = shuffle([...rawTips]);
+  const div = document.createElement('div');
+  div.className = 'bubble';
+  div.textContent = tips.pop();
+  div.style.width = cfg.bubbleWidth + 'vw';
+  div.style.height = cfg.bubbleHeight + 'vh';
+  div.style.fontSize = cfg.fontSize + 'vw';
+  const rot = random(-20, 20);
+  div.style.setProperty('--r', rot + 'deg');
+  const pad = 0.5;
+  const maxLeft = 100 - cfg.bubbleWidth - pad;
+  const maxTop  = 100 - cfg.bubbleHeight - pad;
+  const left = random(pad, Math.max(pad, maxLeft));
+  const top  = random(pad, Math.max(pad, maxTop));
+  div.style.left = left + 'vw';
+  div.style.top  = top + 'vh';
+
+  /* 不再自己 remove → 永不禁播 */
+  // 删掉 animationend 里的 remove()
+
+  document.body.appendChild(div);
+  queue.push(div);          // 入队
+
+  /* 超 150 才删队头（统一淘汰）*/
+  if (queue.length > MAX) {
+    const first = queue.shift();
+    if (first) first.remove();
+  }
+}
+
+setInterval(spawn, 250);
 </script>
 </body>
 </html>
