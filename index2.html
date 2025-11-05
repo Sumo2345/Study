@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>❤Love you❤</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;overflow:hidden;background:linear-gradient(135deg,#ffeef8,#e0c3fc);font-family:-apple-system,PingFang SC,Helvetica,Arial;position:relative}
+    .bubble{
+      position:absolute;background:#fff;border-radius:1em;box-shadow:0 .4em 1.2em rgba(0,0,0,.18), 0 .1em .3em rgba(0,0,0,.1);
+      color:#333;opacity:0;transform:scale(.3) rotate(var(--r));animation:pop .6s cubic-bezier(.18,.89,.32,1.28) forwards;
+      display:flex;align-items:center;justify-content:center;padding:.6em 1em;max-width:90vw;max-height:90vh;word-break:break-all;
+    }
+    @keyframes pop{0%{opacity:0;transform:scale(.3) rotate(var(--r));}60%{opacity:1;transform:scale(1.05) rotate(var(--r));}100%{opacity:1;transform:scale(1) rotate(var(--r));}}
+  </style>
+</head>
+<body>
+<script>
+/* ========== ① 换音乐：填写本地路径或网络 mp3 ========== */
+const bgmSrc = '""C:\Users\苏陌不吃鱼\Downloads\obj_wo3DlMOGwrbDjj7DisKw_14096444542_bafc_a068_39f8_9a9e06e5634410b5e7e81df24749e656.mp3""'; // ← 改成你的音乐地址
+
+/* ========== ② 自动播放（静音→用户点屏后解除静音） ========== */
+const bgm = new Audio(bgmSrc);
+bgm.loop = true;      // 循环播放
+bgm.muted = true;     // 先静音（iOS/微信要求）
+bgm.play().catch(()=>{}); // 立即尝试播放（失败也无感）
+
+/* 第一次点屏幕 → 解除静音 + 继续播放 */
+document.body.addEventListener('touchstart', () => {
+  if (bgm.muted) {
+    bgm.muted = false;
+    bgm.play().catch(()=>{});
+  }
+}, { once: true });
+
+/* ========== 原气泡逻辑（未改动） ========== */
+const cfg = { bubbleWidth: 45, bubbleHeight: 9, fontSize: 3, eachCount: 1 };
+const rawTips = ["我想你了","别熬夜","保持微笑呀","刘雨婷是最棒的","顺顺利利","每天都要元气满满","早点休息","天冷了，多穿衣服","记得吃水果","多喝水哦~","别焦虑哦","我爱你！！！！","一直爱你","多想我","我们会一直在一起",'我们永远不要分开','不开心就要说出来哦！','宝宝最棒啦！！','爱你~❤❤❤','不要内耗哦~'];
+let tips = []; for (let i = 0; i < cfg.eachCount; i++) tips = tips.concat(rawTips); function shuffle(arr){ for (let i = arr.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; } tips = shuffle(tips); function random(min, max){ return Math.random() * (max - min) + min; } function spawn(){ if (tips.length === 0) tips = shuffle([...rawTips]); const div = document.createElement('div'); div.className = 'bubble'; div.textContent = tips.pop(); div.style.width = cfg.bubbleWidth + 'vw'; div.style.height = cfg.bubbleHeight + 'vh'; div.style.fontSize = cfg.fontSize + 'vw'; const rot = random(-20, 20); div.style.setProperty('--r', rot + 'deg'); const pad = 0.5; const maxLeft = 100 - cfg.bubbleWidth - pad; const maxTop = 100 - cfg.bubbleHeight - pad; const left = random(pad, Math.max(pad, maxLeft)); const top = random(pad, Math.max(pad, maxTop)); div.style.left = left + 'vw'; div.style.top = top + 'vh'; document.body.appendChild(div); } setInterval(spawn, 250);
+</script>
+</body>
+</html>
