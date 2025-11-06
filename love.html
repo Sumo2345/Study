@@ -30,7 +30,7 @@ const mp3PlayUrl = "https://gitee.com/soo-moke/music/blob/master/mci.mp3";
         // 2. 将变量赋值给音频播放器的 src
 const audioPlayer = document.getElementById("audioPlayer");
 audioPlayer.src = mp3PlayUrl; // 关键：用变量关联播放链接
-
+bgm = audioPlayer
         // （可选）打印变量验证链接是否正确
 console.log("当前播放链接：", mp3PlayUrl);
 
@@ -77,6 +77,7 @@ document.body.addEventListener('touchstart', () => {
 </script>
 </body>
 </html>
+
 
 
 
