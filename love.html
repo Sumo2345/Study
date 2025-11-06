@@ -21,9 +21,18 @@
 
 <script>
 /* ========== 音乐：相对路径 + 点屏播放 ========== */
-const bgmSrc = 'https://sumo2345.github.io/123/mci.mp3';   // ① 放同目录 ② 英文 ③ 无空格
-const bgm = new Audio(bgmSrc);
-bgm.loop = true;
+// const bgmSrc = 'https://sumo2345.github.io/123/mci.mp3';   // ① 放同目录 ② 英文 ③ 无空格
+// const bgm = new Audio(bgmSrc);
+// bgm.loop = true;
+// 1. 存储 Gitee MP3 的 raw 链接（替换成你的链接！）
+const mp3PlayUrl = "https://gitee.com/soo-moke/music/blob/master/mci.mp3";
+
+        // 2. 将变量赋值给音频播放器的 src
+const audioPlayer = document.getElementById("audioPlayer");
+audioPlayer.src = mp3PlayUrl; // 关键：用变量关联播放链接
+
+        // （可选）打印变量验证链接是否正确
+console.log("当前播放链接：", mp3PlayUrl);
 
 /* ========== 气泡参数 ========== */
 const cfg = { bubbleWidth: 45, bubbleHeight: 9, fontSize: 3, eachCount: 1 };
@@ -68,5 +77,6 @@ document.body.addEventListener('touchstart', () => {
 </script>
 </body>
 </html>
+
 
 
