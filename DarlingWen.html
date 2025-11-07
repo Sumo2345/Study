@@ -28,7 +28,7 @@
     
     /* ========== 气泡参数 ========== */
     const cfg = { bubbleWidth: 45, bubbleHeight: 9, fontSize: 3, eachCount: 1 };
-    const rawTips = ["我想你了","别熬夜","保持微笑呀","雯宝是最棒的","顺顺利利","每天都要元气满满哦","早点休息","天冷了，多穿衣服","记得吃水果","雯宝宝多喝水哦~","别焦虑哦","雯宝我爱你！！！！","一直爱你","多想我","我们会一直在一起",'我们永远不要分开','不开心就要说出来哦！','雯宝宝最棒啦！！','爱你哦 雯宝~❤❤❤','不要内耗哦~'];
+    const rawTips = ["我想你了","别熬夜","保持微笑呀","雯宝是最棒的","顺顺利利","每天都要元气满满哦","早点休息","天冷了，雯宝要多穿衣服","雯宝记得吃水果","雯宝宝多喝水哦~","别焦虑哦","雯宝我爱你！！！！","一直爱你 雯宝","多想我","我们会一直在一起",'我们永远不要分开','不开心就要说出来哦！','雯宝宝最棒啦！！','爱你哦 雯宝~❤❤❤','不要内耗哦~'];
     let tips = []; for (let i = 0; i < cfg.eachCount; i++) tips = tips.concat(rawTips); function shuffle(arr){ for (let i = arr.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; } tips = shuffle(tips); function random(min, max){ return Math.random() * (max - min) + min; }
     
     /* ========== 气泡：限数 + 定时淘汰（无动画自毁） ========== */
